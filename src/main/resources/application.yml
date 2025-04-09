@@ -1,0 +1,21 @@
+application:
+    name: ${APP_NAME:-security-ms}
+    version: "1.0.0"
+    api:
+      endpoint: ${API_ENDPOINT:-/api/auth}
+      version: ${API_VERSION:-v1}
+spring:
+  r2dbc:
+    pool:
+      enable: true
+      initial-size: 10
+      max-size: 20
+    url: ${DB_URL:-r2dbc:mysql://host.docker.internal:3306/user}
+    username: ${DB_USER:-root!}
+    password: ${DB_PASSWORD:-changeInProd!}
+jwt:
+  token:
+    expiration: 36000000
+  refresh-token:
+    expiration: 604800000
+  secret: ${JWT_SECRET:-r0M7GqBT5VAmx2871SJN88g7fdOpVIOh}
