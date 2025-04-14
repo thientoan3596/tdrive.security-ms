@@ -1,5 +1,6 @@
 package org.thluon.tdrive.service;
 
+import com.github.thientoan3596.exception.UniqueKeyViolationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -17,7 +18,6 @@ import org.thluon.tdrive.dto.AuthenticationRequestDTO;
 import org.thluon.tdrive.dto.AuthenticationResponseDTO;
 import org.thluon.tdrive.dto.RegistrationRequestDTO;
 import org.thluon.tdrive.entity.UserDetailsImpl;
-import org.thluon.tdrive.exception.UniqueKeyViolationException;
 import org.thluon.tdrive.mapper.UserMapper;
 import reactor.core.publisher.Mono;
 

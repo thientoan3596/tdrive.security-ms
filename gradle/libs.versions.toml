@@ -10,8 +10,10 @@ mapstruct-lombok-binding="0.2.0"
 jjwt="0.12.6"
 jakarta-validation-api="3.1.1"
 hibernate-validator="8.0.1.Final"
-spring-doc="2.8.6"
+spring-doc="2.6.0"
 asyncer-r2dbc="1.4.0"
+thluon-converter="v0.1.0-SNAPSHOT"
+thluon-rest="v0.1.0-SNAPSHOT2"
 jug="5.1.0"
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot"  }
@@ -28,9 +30,11 @@ jjwt-jackson={group="io.jsonwebtoken",name="jjwt-jackson",version.ref="jjwt"}
 jakarta-validation-api={module="jakarta.validation:jakarta.validation-api",version.ref="jakarta-validation-api"}
 jug = { module = "com.fasterxml.uuid:java-uuid-generator", version.ref = "jug" }
 hibernate-validator={module="org.hibernate.validator:hibernate-validator",version.ref="hibernate-validator"}
-springdoc-webflux={module="org.springdoc:springdoc-openapi-starter-webflux-api",version.ref="spring-doc"}
+springdoc-webflux={module="org.springdoc:springdoc-openapi-starter-webflux-ui",version.ref="spring-doc"}
 spring-r2dbc= {module="org.springframework.boot:spring-boot-starter-data-r2dbc"}
 asyncer-r2dbc= {module="io.asyncer:r2dbc-mysql",version.ref="asyncer-r2dbc"}
+thluon-converter={module="com.github.thientoan3596:spring.uuid-bytes-converters",version.ref="thluon-converter"}
+thluon-rest= {module="com.github.thientoan3596:spring.rest-common",version.ref="thluon-rest"}
 [bundles]
 jjwt=["jjwt-core","jjwt-impl","jjwt-jackson"]
 hibernate-jakarta-validator=["jakarta-validation-api","hibernate-validator"]

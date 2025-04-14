@@ -1,5 +1,6 @@
 package org.thluon.tdrive.controller;
 
+import com.github.thientoan3596.dto.ErrorResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.thluon.tdrive.dto.AuthenticationRequestDTO;
 import org.thluon.tdrive.dto.AuthenticationResponseDTO;
-import org.thluon.tdrive.dto.ErrorResponseDTO;
 import org.thluon.tdrive.dto.RegistrationRequestDTO;
 import reactor.core.publisher.Mono;
 
@@ -77,7 +77,5 @@ public interface AuthenticationAPI {
     default Mono<ResponseEntity<AuthenticationResponseDTO>> refreshToken(ServerHttpRequest request) {
         throw new IllegalStateException("Not yet implemented");
     }
-
-
     //endregion POST /refresh-token - Refresh token
 }

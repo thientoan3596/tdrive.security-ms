@@ -11,10 +11,6 @@ java {
         languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
     }
 }
-repositories {
-    gradlePluginPortal()
-    mavenCentral()
-}
 dependencies {
     implementation(libs.bundles.jjwt)
     implementation(libs.bundles.hibernate.jakarta.validator)
@@ -23,6 +19,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation(libs.jug)
     implementation(libs.bundles.r2dbc)
+    implementation(libs.thluon.converter)
+    implementation(libs.thluon.rest)
     compileOnly(libs.bundles.mapstruct.lombok.compile)
     annotationProcessor(libs.bundles.mapstruct.lombok.annotation.processor)
 }

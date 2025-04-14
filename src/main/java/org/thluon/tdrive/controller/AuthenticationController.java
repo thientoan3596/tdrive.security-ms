@@ -46,7 +46,6 @@ public class AuthenticationController implements AuthenticationAPI {
     public Mono<ResponseEntity<AuthenticationResponseDTO>> authenticate(AuthenticationRequestDTO authenticationRequest) {
         return authenticationService.authenticate(authenticationRequest).map(ResponseEntity::ok);
     }
-
     @Override
     public Mono<ResponseEntity<AuthenticationResponseDTO>> refreshToken(ServerHttpRequest request) {
         return authenticationService.refreshToken(request).map(ResponseEntity::ok);
