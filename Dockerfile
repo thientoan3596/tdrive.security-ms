@@ -6,4 +6,4 @@ COPY gradlew settings.gradle.kts build.gradle.kts gradle.properties ./
 RUN chmod +x gradlew
 RUN ./gradlew bootJar --no-daemon
 EXPOSE 8761
-CMD ["java", "-jar", "./build/libs/security-ms.jar"]
+CMD ["java", "-jar", "./build/libs/security-registry.jar"]
