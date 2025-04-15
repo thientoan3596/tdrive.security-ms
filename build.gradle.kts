@@ -12,9 +12,11 @@ java {
     }
 }
 dependencies {
+    implementation(platform(libs.spring.cloud.dependencies))
     implementation(libs.bundles.jjwt)
     implementation(libs.bundles.hibernate.jakarta.validator)
     implementation(libs.springdoc.webflux)
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation(libs.jug)
@@ -26,4 +28,12 @@ dependencies {
 }
 tasks.bootJar {
     archiveFileName.set("security-ms.jar")
+}
+tasks.bootRun{
+    doFirst {
+        file(".env").readLines().forEach {
+            val (key, value) = it.split("=")
+            environment(key, value)
+        }
+    }
 }

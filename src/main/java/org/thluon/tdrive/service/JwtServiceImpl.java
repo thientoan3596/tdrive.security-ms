@@ -27,7 +27,6 @@ public class JwtServiceImpl implements JwtService{
     private long expiration;
     @Value("${jwt.refresh-token.expiration:604_800_000}")
     private long refreshTokenExpiration;
-
     private SecretKey secretKey;
     @PostConstruct
     public void init(){

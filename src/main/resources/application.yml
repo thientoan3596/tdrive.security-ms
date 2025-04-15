@@ -1,10 +1,14 @@
+server:
+  port: ${SERVER_PORT:-8080}
 application:
-    name: ${APP_NAME:-security-ms}
-    version: "1.0.0"
-    api:
-      endpoint: ${API_ENDPOINT:-/api/auth}
-      version: ${API_VERSION:-v1}
+  name: ${APP_NAME:-security-ms}
+  version: "1.0.0"
+  api:
+    endpoint: ${API_ENDPOINT:-/api/auth}
+    version: ${API_VERSION:-v1}
 spring:
+  application:
+    name: security-ms
   r2dbc:
     pool:
       enable: true
@@ -18,4 +22,13 @@ jwt:
     expiration: 36000000
   refresh-token:
     expiration: 604800000
-  secret: ${JWT_SECRET:-r0M7GqBT5VAmx2871SJN88g7fdOpVIOh}
+  secret: ${JWT_SECRET:-r0M7GqBT5VAmx2871SJN88g7fdFOpVIOh}
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL:http://host.docker.internal:8761/eureka/}
+    renewal-interval-in-seconds: 30 # Heartbeat every 30 seconds
+    instance-info-replication-interval-seconds: 60
+    lease-expiration-duration-in-seconds: 90
+  instance:
+    prefer-ip-address: true
