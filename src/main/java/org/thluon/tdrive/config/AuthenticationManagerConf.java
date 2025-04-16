@@ -13,17 +13,17 @@ import org.thluon.tdrive.security.PasswordEncoderImpl;
 @RequiredArgsConstructor
 public class AuthenticationManagerConf {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new PasswordEncoderImpl();
-    }
-    @Bean
-    public ReactiveAuthenticationManager reactiveAuthenticationManager(
-            ReactiveUserDetailsService reactiveUserDetailsService,
-            PasswordEncoder passwordEncoder
-    ) {
-        var manager = new UserDetailsRepositoryReactiveAuthenticationManager(reactiveUserDetailsService);
-        manager.setPasswordEncoder(passwordEncoder);
-        return manager;
-    }
+  @Bean
+  PasswordEncoder passwordEncoder() {
+    return new PasswordEncoderImpl();
+  }
+
+  @Bean
+  ReactiveAuthenticationManager reactiveAuthenticationManager(
+      ReactiveUserDetailsService reactiveUserDetailsService, PasswordEncoder passwordEncoder) {
+    var manager =
+        new UserDetailsRepositoryReactiveAuthenticationManager(reactiveUserDetailsService);
+    manager.setPasswordEncoder(passwordEncoder);
+    return manager;
+  }
 }

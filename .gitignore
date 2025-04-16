@@ -9,7 +9,6 @@ build/
 bin/
 mysql/
 .env
-docker-compose.yml
 .classpath
 .factorypath
 .project

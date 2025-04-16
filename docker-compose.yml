@@ -1,6 +1,6 @@
 services:
-  user-msql-database:
-    container_name: security-msql-database
+  security-mysql-local-dev:
+    container_name: security-mysql-local-dev
     image: mysql:8.0
     command: >
       --character-set-server=utf8mb4
@@ -8,22 +8,42 @@ services:
       --init-connect='SET NAMES utf8mb4;'
       --skip-character-set-client-handshake
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
       TZ: ${TZ}
     ports:
-      - "3307:3306"
+      - "${DB_PORT}:3306"
     networks:
-      - security-ms
+      - security-ms-nw
     volumes:
       - ./mysql/init:/docker-entrypoint-initdb.d
-      - ./mysql/data:/var/lib/mysql
+      - ./mysql/.data:/var/lib/mysql
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 20s
-      timeout: 15s
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 25s
       retries: 5
-networks:
   security-ms:
+    container_name: security-ms-local-dev
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      # EUREKA_SERVER_URL: "http://${SERVICE_REGISTRY_HOSTNAME}:${SERVICE_REGISTRY_PORT}/eureka/"
+      SERVER_PORT: ${SERVER_PORT}
+      EUREKA_CLIENT_ENABLE: false
+      DB_URL: "r2dbc:mysql://security-mysql-local-dev:${DB_PORT}/${DB_NAME}"
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    depends_on:
+      security-mysql-local-dev:
+        condition: service_healthy
+    networks:
+      - security-ms-nw
+networks:
+  security-ms-nw:
     driver: bridge

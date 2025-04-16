@@ -19,6 +19,7 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation(libs.jug)
     implementation(libs.bundles.r2dbc)
     implementation(libs.thluon.converter)
@@ -29,11 +30,17 @@ dependencies {
 tasks.bootJar {
     archiveFileName.set("security-ms.jar")
 }
-tasks.bootRun{
+tasks.bootRun {
     doFirst {
         file(".env").readLines().forEach {
-            val (key, value) = it.split("=")
-            environment(key, value)
+            val cleanLine = it.trim().split("#")[0].trim()
+            if (cleanLine.isNotEmpty()) {
+                val parts = cleanLine.split("=", limit = 2)
+                if (parts.size == 2 && parts[0].isNotEmpty()) {
+                    val (key, value) = parts
+                    environment(key, value)
+                }
+            }
         }
     }
 }
