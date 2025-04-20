@@ -19,7 +19,7 @@ public class SecurityConf {
   @Value("${SPRINGDOC_SECURE}")
   private Boolean secureApiDocEndpoints;
 
-  @Value("#{'${SECURE_ACTUATORS:}'.split(',')}")
+  @Value("#{{${SECURE_ACTUATORS:}.isEmpty() ? {} : '${SECURE_ACTUATORS}'.split(',')}}")
   private String[] SECURE_ACTUATORS;
 
   @SneakyThrows
@@ -34,19 +34,18 @@ public class SecurityConf {
                     .pathMatchers("/swagger-ui/**", "/webjars/swagger-ui/**", "/v3/api-doc/**")
                     .access(
                         (mono, context) ->
-                            Mono.just(
-                                new AuthorizationDecision(
-                                    !secureApiDocEndpoints
-                                        || (mono.blockOptional()
-                                            .map(
-                                                auth ->
-                                                    auth.isAuthenticated()
-                                                        && auth.getAuthorities().stream()
-                                                            .anyMatch(
-                                                                a ->
-                                                                    a.getAuthority()
-                                                                        .equals("ROLE_Developer")))
-                                            .orElse(false)))))
+                            secureApiDocEndpoints
+                                ? mono.map(
+                                        auth ->
+                                            auth.isAuthenticated()
+                                                && auth.getAuthorities().stream()
+                                                    .anyMatch(
+                                                        a ->
+                                                            a.getAuthority()
+                                                                .equals("ROLE_Developer")))
+                                    .map(AuthorizationDecision::new)
+                                    .defaultIfEmpty(new AuthorizationDecision(false))
+                                : Mono.just(new AuthorizationDecision(true)))
                     .pathMatchers(SECURE_ACTUATORS)
                     .hasRole("ROLE_SYSTEM_ADMIN")
                     .anyExchange()
