@@ -1,5 +1,6 @@
 package org.thluon.tdrive.config;
 
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,37 +20,43 @@ public class SecurityConf {
   @Value("${SPRINGDOC_SECURE}")
   private Boolean secureApiDocEndpoints;
 
-  @Value("#{{${SECURE_ACTUATORS:}.isEmpty() ? {} : '${SECURE_ACTUATORS}'.split(',')}}")
+  @Value(
+      "#{ ('${SECURE_ACTUATORS:}').trim().isEmpty() ? new String[0] :"
+          + " '${SECURE_ACTUATORS:}'.split(',') }")
   private String[] SECURE_ACTUATORS;
 
   @SneakyThrows
   @Bean
   SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+    System.out.println("[" + Arrays.toString(SECURE_ACTUATORS) + "]");
     http.csrf(ServerHttpSecurity.CsrfSpec::disable)
         .authorizeExchange(
-            exchange ->
-                exchange
-                    .pathMatchers("actuator/health", "actuator/env")
-                    .permitAll()
-                    .pathMatchers("/swagger-ui/**", "/webjars/swagger-ui/**", "/v3/api-doc/**")
-                    .access(
-                        (mono, context) ->
-                            secureApiDocEndpoints
-                                ? mono.map(
-                                        auth ->
-                                            auth.isAuthenticated()
-                                                && auth.getAuthorities().stream()
-                                                    .anyMatch(
-                                                        a ->
-                                                            a.getAuthority()
-                                                                .equals("ROLE_Developer")))
-                                    .map(AuthorizationDecision::new)
-                                    .defaultIfEmpty(new AuthorizationDecision(false))
-                                : Mono.just(new AuthorizationDecision(true)))
-                    .pathMatchers(SECURE_ACTUATORS)
-                    .hasRole("ROLE_SYSTEM_ADMIN")
-                    .anyExchange()
-                    .permitAll());
+            exchange -> {
+              var spec =
+                  exchange
+                      .pathMatchers("actuator/health", "actuator/env")
+                      .permitAll()
+                      .pathMatchers("/swagger-ui/**", "/webjars/swagger-ui/**", "/v3/api-doc/**")
+                      .access(
+                          (mono, context) ->
+                              secureApiDocEndpoints
+                                  ? mono.map(
+                                          auth ->
+                                              auth.isAuthenticated()
+                                                  && auth.getAuthorities().stream()
+                                                      .anyMatch(
+                                                          a ->
+                                                              a.getAuthority()
+                                                                  .equals("ROLE_Developer")))
+                                      .map(AuthorizationDecision::new)
+                                      .defaultIfEmpty(new AuthorizationDecision(false))
+                                  : Mono.just(new AuthorizationDecision(true)))
+                      .anyExchange()
+                      .permitAll();
+              if (SECURE_ACTUATORS.length != 0) {
+                spec.pathMatchers(SECURE_ACTUATORS).hasRole("ROLE_SYSTEM_ADMIN");
+              }
+            });
     return http.build();
   }
 }
