@@ -1,13 +1,9 @@
 server:
   port: ${SERVER_PORT:8080}
-application:
-  api:
-    endpoint: ${API_ENDPOINT:/api/auth}
-    version: ${API_VERSION:v1}
-    secure: ${API_DOC_SECURE:false}
+  forward-headers-strategy: framework
 spring:
   application:
-    name: ${APPLICATION_NAME:-security-ms}
+    name: ${SPRING_APPLICATION_NAME:security-ms}
   r2dbc:
     pool:
       enable: ${DB_POOL_ENABLE:true}
@@ -16,13 +12,6 @@ spring:
     url: ${DB_URL:-r2dbc:mysql://host.docker.internal:3306/user}
     username: ${DB_USER:-root}
     password: ${DB_PASSWORD:-changeInProd!}
-jwt:
-  token:
-    expiration: ${JWT_TKN_EXP:36000000 }
-  refresh-token:
-    expiration: ${JWT_REFR_TKEN_EXP:604800000}
-  # r0M7GqBT5VAmx2871SJN88g7fdFOpVIOh
-  secret: ${JWT_SECRET:-r0M7GqBT5VAmx2871SJN88g7fdFOpVIOh}
 eureka:
   client:
     enabled: ${EUREKA_CLIENT_ENABLE:true}
@@ -32,7 +21,7 @@ eureka:
     instance-info-replication-interval-seconds: ${EUREKA_CLIENT_INSTANCE_REPLICATION_INTERVAL:60}
     lease-expiration-duration-in-seconds: ${EUREKA_CLIENT_LEASE_EXPIRATION_DURATION:90}
   instance:
-    prefer-ip-address: ${EUREKA_INSTANCE_PREFER_IP_ADDR:true}
+    instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 management:
   endpoints:
     web:
@@ -41,3 +30,14 @@ management:
   endpoint:
     env:
       show-values: ALWAYS
+
+springdoc:
+  secure: ${SPRINGDOC_SECURE:false}
+  cache:
+    disabled: true
+jwt:
+  token:
+    expiration: ${JWT_TKN_EXP:36000000 }
+  refresh-token:
+    expiration: ${JWT_REFR_TKEN_EXP:604800000}
+  secret: ${JWT_SECRET}

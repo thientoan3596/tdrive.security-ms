@@ -219,4 +219,16 @@ elif [ "${NO_INIT_TEMPLATE}" = false ]; then
     log "Generated ${target}"
   done
 fi
-docker compose up -d
+
+# There is a bug related to docker with wsl2 causing high vmemwsl usage without releasing.
+# Instead of directly calling docker compose inside WSL, use cmd.exe instead.
+# Theoretically, it should make no different if using docker wsl container, but in reality this make significant different.
+# Hypotheiscally, this is wsl2 kernel issue.
+is_wsl2() {
+  grep -q "microsoft" /proc/version && grep -q "WSL2" /proc/sys/kernel/osrelease
+}
+if is_wsl2; then
+  cmd.exe /c "docker-compose up -d"
+else
+  docker compose up -d
+fi

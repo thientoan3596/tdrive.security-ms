@@ -15,7 +15,8 @@ import reactor.core.publisher.Mono;
 @EnableWebFluxSecurity
 @RequiredArgsConstructor
 public class SecurityConf {
-  @Value("${application.api.secure}")
+
+  @Value("${SPRINGDOC_SECURE}")
   private Boolean secureApiDocEndpoints;
 
   @Value("#{'${SECURE_ACTUATORS:}'.split(',')}")
