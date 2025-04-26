@@ -20,8 +20,7 @@ public class AuthenticationController implements AuthenticationAPI {
   private final AuthenticationService authenticationService;
 
   @Override
-  public Mono<ResponseEntity<AuthenticationResponseDTO>> register(
-      Mono<RegistrationRequestDTO> requestMono) {
+  public Mono<ResponseEntity<AuthenticationResponseDTO>> register(Mono<RegistrationRequestDTO> requestMono) {
     return requestMono.flatMap(
         request -> {
           if (request.getPassword() != null

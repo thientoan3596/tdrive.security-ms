@@ -36,7 +36,7 @@ public interface AuthenticationAPI {
     @ApiResponse(responseCode = "400", description = "Payload không hợp lệ", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDTO.class)))
     //endregion
     @PostMapping("/register")
-    default Mono<ResponseEntity<AuthenticationResponseDTO>> register(@RequestBody Mono<@Valid RegistrationRequestDTO> requestMono) {
+    default Mono<ResponseEntity<AuthenticationResponseDTO>> register(@RequestBody @Valid Mono<RegistrationRequestDTO> requestMono) {
         throw new IllegalStateException("Not yet implemented");
     }
 
