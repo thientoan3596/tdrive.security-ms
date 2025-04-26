@@ -23,7 +23,6 @@ public class ControllerAdvice {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
         return Mono.just(new ResponseEntity<>(ErrorResponseDTO.builder().errors(fieldErrors).isFormValidationError(true).status(HttpStatus.BAD_REQUEST).build(), HttpStatus.BAD_REQUEST));
     }
-
     @ExceptionHandler(LockedException.class)
     @ResponseStatus(HttpStatus.LOCKED)
     public ResponseEntity<ErrorResponseDTO> handleLockedException(LockedException e) {
